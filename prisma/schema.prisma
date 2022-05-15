@@ -249,6 +249,7 @@ model PedidoPlantaProcesado {
   PlantaProcesado           PlantaProcesado             @relation(fields: [idPlantaProcesado], references: [id], onDelete: NoAction, onUpdate: NoAction)
   DetallePedidoMateriaPrima DetallePedidoMateriaPrima[]
   DetallePedidoProducto     DetallePedidoProducto[]
+  ViajePedido               ViajePedido[]
 }
 
 model PlantaMinera {
@@ -260,6 +261,49 @@ model PlantaMinera {
   GiroNegocio       GiroNegocio?        @relation(fields: [idGiroNegocio], references: [id], onDelete: NoAction, onUpdate: NoAction)
   InventarioMineral InventarioMineral[]
   PedidoMinera      PedidoMinera[]
+}
+
+model Cliente {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime? @default(now()) @db.Timestamptz(6)
+  nombre    String
+  nit       String?
+  direccion String?
+  telefono  String?
+}
+
+model VehiculoTransporte {
+  id            Int       @id @default(autoincrement())
+  createdAt     DateTime? @default(now()) @db.Timestamptz(6)
+  placas        String
+  modelo        String
+  marca         String
+  year          Int
+  color         String
+  transmision   Int?      @default(1)
+  observaciones String?
+  kilometraje   Int
+  Viaje         Viaje[]
+}
+
+model Viaje {
+  id                 Int                @id @default(autoincrement())
+  createdAt          DateTime?          @default(now()) @db.Timestamptz(6)
+  idVehiculo         Int
+  coordenadasInicio  String
+  coordenadasDestino String
+  status             Int
+  VehiculoTransporte VehiculoTransporte @relation(fields: [idVehiculo], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  ViajePedido        ViajePedido[]
+}
+
+model ViajePedido {
+  id                    Int                    @id @default(autoincrement())
+  createdAt             DateTime?              @default(now()) @db.Timestamptz(6)
+  idPedido              Int?
+  idViaje               Int?
+  PedidoPlantaProcesado PedidoPlantaProcesado? @relation(fields: [idPedido], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Viaje                 Viaje?                 @relation(fields: [idViaje], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 enum TipoPedidoMaquinaria {
@@ -276,4 +320,9 @@ enum statusMaquinaria {
 enum tipopedidomaquinaria {
   alquiler
   venta
+}
+
+enum tipotransmision {
+  Automatica
+  Mecanica
 }
