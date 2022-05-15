@@ -1,0 +1,279 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model DetallePedidoMaquinaria {
+  id               Int              @id @default(autoincrement())
+  createdAt        DateTime?        @default(now()) @db.Timestamptz(6)
+  idMaquinaria     Int
+  idPedido         Int
+  subTotal         Float            @db.Real
+  Maquinaria       Maquinaria       @relation(fields: [idMaquinaria], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  PedidoMaquinaria PedidoMaquinaria @relation(fields: [idPedido], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model GiroNegocio {
+  id                 Int                  @id @default(autoincrement())
+  createdAt          DateTime?            @default(now()) @db.Timestamptz(6)
+  nombre             String
+  descripcion        String?
+  ruta               String
+  Permiso            Permiso[]
+  PlantaMinera       PlantaMinera[]
+  PlantaProcesado    PlantaProcesado[]
+  SucursalMaquinaria SucursalMaquinaria[]
+}
+
+model InventarioMaquinaria {
+  id                   Int                @id @default(autoincrement())
+  createdAt            DateTime?          @default(now()) @db.Timestamptz(6)
+  idSucursalMaquinaria Int
+  idMaquinaria         Int
+  Maquinaria           Maquinaria         @relation(fields: [idMaquinaria], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  SucursalMaquinaria   SucursalMaquinaria @relation(fields: [idSucursalMaquinaria], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model Maquinaria {
+  id                      Int                       @id @default(autoincrement())
+  createdAt               DateTime?                 @default(now()) @db.Timestamptz(6)
+  modelo                  String
+  descripcion             String?
+  marca                   String
+  linea                   String
+  placas                  String                    @unique
+  precio                  Float                     @db.Real
+  status                  statusMaquinaria?
+  DetallePedidoMaquinaria DetallePedidoMaquinaria[]
+  InventarioMaquinaria    InventarioMaquinaria[]
+}
+
+model PedidoMaquinaria {
+  id                      Int                       @id @default(autoincrement())
+  createdAt               DateTime?                 @default(now()) @db.Timestamptz(6)
+  nombreCliente           String
+  nit                     String
+  notas                   String?
+  subTotal                Float                     @db.Real
+  impuestos               Float?                    @db.Real
+  total                   Float                     @db.Real
+  createdBy               String?                   @db.Uuid
+  idSucursalMaquinaria    Int?
+  tipoPedido              Int?
+  Usuario                 Usuario?                  @relation(fields: [createdBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  SucursalMaquinaria      SucursalMaquinaria?       @relation(fields: [idSucursalMaquinaria], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  DetallePedidoMaquinaria DetallePedidoMaquinaria[]
+}
+
+model Permiso {
+  id            Int         @id @default(autoincrement())
+  createdAt     DateTime?   @default(now()) @db.Timestamptz(6)
+  idRol         Int
+  idGiroNegocio Int
+  GiroNegocio   GiroNegocio @relation(fields: [idGiroNegocio], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Rol           Rol         @relation(fields: [idRol], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model PlantaProcesado {
+  id                    Int                     @id @default(autoincrement())
+  createdAt             DateTime?               @default(now()) @db.Timestamptz(6)
+  nombre                String
+  ubicacion             String
+  telefono              String
+  idGiroNegocio         Int
+  GiroNegocio           GiroNegocio             @relation(fields: [idGiroNegocio], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  InventarioMaterial    InventarioMaterial[]
+  InventarioProducto    InventarioProducto[]
+  PedidoPlantaProcesado PedidoPlantaProcesado[]
+}
+
+model Producto {
+  id                    Int                     @id @default(autoincrement())
+  createdAt             DateTime?               @default(now()) @db.Timestamptz(6)
+  nombre                String
+  descripcion           String?
+  precioUnidad          Float                   @db.Real
+  galeria               String[]
+  DetallePedidoProducto DetallePedidoProducto[]
+  InventarioProducto    InventarioProducto[]
+}
+
+model Rol {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime? @default(now()) @db.Timestamptz(6)
+  nombre    String?
+  Permiso   Permiso[]
+  Usuario   Usuario[]
+}
+
+model SucursalMaquinaria {
+  id                   Int                    @id @default(autoincrement())
+  createdAt            DateTime?              @default(now()) @db.Timestamptz(6)
+  nombre               String
+  ubicacion            String
+  telefono             String
+  idGiroNegocio        Int
+  GiroNegocio          GiroNegocio            @relation(fields: [idGiroNegocio], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  InventarioMaquinaria InventarioMaquinaria[]
+  PedidoMaquinaria     PedidoMaquinaria[]
+}
+
+model Usuario {
+  id                    String                  @id @db.Uuid
+  createdAt             DateTime?               @default(now()) @db.Timestamptz(6)
+  nombre                String?
+  correo                String                  @unique
+  activo                Boolean?                @default(false)
+  idRol                 Int?
+  Rol                   Rol?                    @relation(fields: [idRol], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  PedidoMaquinaria      PedidoMaquinaria[]
+  PedidoMinera          PedidoMinera[]
+  PedidoPlantaProcesado PedidoPlantaProcesado[]
+}
+
+model DetallePedidoMateriaPrima {
+  id                    Int                   @id @default(autoincrement())
+  createdAt             DateTime?             @default(now()) @db.Timestamptz(6)
+  materialId            Int
+  idPedido              Int
+  cantidad              Int
+  subTotal              Float                 @db.Real
+  PedidoPlantaProcesado PedidoPlantaProcesado @relation(fields: [idPedido], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Material              Material              @relation(fields: [materialId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model DetallePedidoMineral {
+  id           Int          @id @default(autoincrement())
+  createdAt    DateTime?    @default(now()) @db.Timestamptz(6)
+  idMineral    Int
+  idPedido     Int
+  cantidad     Int
+  subTotal     Int
+  Mineral      Mineral      @relation(fields: [idMineral], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  PedidoMinera PedidoMinera @relation(fields: [idPedido], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model DetallePedidoProducto {
+  id                    Int                   @id @default(autoincrement())
+  createdAt             DateTime?             @default(now()) @db.Timestamptz(6)
+  idProducto            Int
+  idPedido              Int
+  cantidad              Int
+  subTotal              Float                 @db.Real
+  PedidoPlantaProcesado PedidoPlantaProcesado @relation(fields: [idPedido], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Producto              Producto              @relation(fields: [idProducto], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model InventarioMaterial {
+  id                Int             @id @default(autoincrement())
+  createdAt         DateTime?       @default(now()) @db.Timestamptz(6)
+  idPlantaProcesado Int
+  idMaterial        Int
+  Material          Material        @relation(fields: [idMaterial], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  PlantaProcesado   PlantaProcesado @relation(fields: [idPlantaProcesado], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model InventarioMineral {
+  id             Int          @id @default(autoincrement())
+  createdAt      DateTime?    @default(now()) @db.Timestamptz(6)
+  idPlantaMinera Int
+  idMineral      Int
+  cantidad       Int?
+  Mineral        Mineral      @relation(fields: [idMineral], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  PlantaMinera   PlantaMinera @relation(fields: [idPlantaMinera], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model InventarioProducto {
+  id                Int              @id @default(autoincrement())
+  createdAt         DateTime?        @default(now()) @db.Timestamptz(6)
+  idPlantaProcesado Int?
+  idProducto        Int?
+  PlantaProcesado   PlantaProcesado? @relation(fields: [idPlantaProcesado], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Producto          Producto?        @relation(fields: [idProducto], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model Material {
+  id                        Int                         @id @default(autoincrement())
+  createdAt                 DateTime?                   @default(now()) @db.Timestamptz(6)
+  nombre                    String
+  descripcion               String?
+  precioUnidad              Float                       @db.Real
+  unidadMedida              String
+  DetallePedidoMateriaPrima DetallePedidoMateriaPrima[]
+  InventarioMaterial        InventarioMaterial[]
+}
+
+model Mineral {
+  id                   Int                    @id @default(autoincrement())
+  createdAt            DateTime?              @default(now()) @db.Timestamptz(6)
+  nombre               String
+  descripcion          String?
+  precioUnidad         Float                  @db.Real
+  unidadMedida         Int?
+  DetallePedidoMineral DetallePedidoMineral[]
+  InventarioMineral    InventarioMineral[]
+}
+
+model PedidoMinera {
+  id                   Int                    @id(map: "PedidoMineral_pkey") @default(autoincrement())
+  createdAt            DateTime?              @default(now()) @db.Timestamptz(6)
+  nombreCliente        String
+  nit                  String?
+  notas                String?
+  subTotal             Float                  @db.Real
+  impuestos            Float                  @db.Real
+  total                Float                  @db.Real
+  createdBy            String                 @db.Uuid
+  idPlantaMinera       Int
+  Usuario              Usuario                @relation(fields: [createdBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  PlantaMinera         PlantaMinera           @relation(fields: [idPlantaMinera], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  DetallePedidoMineral DetallePedidoMineral[]
+}
+
+model PedidoPlantaProcesado {
+  id                        Int                         @id @default(autoincrement())
+  createdAt                 DateTime?                   @default(now()) @db.Timestamptz(6)
+  nombreCliente             String?
+  nit                       String?
+  notas                     String?
+  subTotal                  Float                       @db.Real
+  impuestos                 Float                       @db.Real
+  total                     Float                       @db.Real
+  createdBy                 String                      @db.Uuid
+  idPlantaProcesado         Int
+  Usuario                   Usuario                     @relation(fields: [createdBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  PlantaProcesado           PlantaProcesado             @relation(fields: [idPlantaProcesado], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  DetallePedidoMateriaPrima DetallePedidoMateriaPrima[]
+  DetallePedidoProducto     DetallePedidoProducto[]
+}
+
+model PlantaMinera {
+  id                Int                 @id @default(autoincrement())
+  createdAt         DateTime?           @default(now()) @db.Timestamptz(6)
+  nombre            String
+  dirreccion        String
+  idGiroNegocio     Int?
+  GiroNegocio       GiroNegocio?        @relation(fields: [idGiroNegocio], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  InventarioMineral InventarioMineral[]
+  PedidoMinera      PedidoMinera[]
+}
+
+enum TipoPedidoMaquinaria {
+  alquiler
+  venta
+}
+
+enum statusMaquinaria {
+  vendido
+  alquiler
+  disponible
+}
+
+enum tipopedidomaquinaria {
+  alquiler
+  venta
+}
