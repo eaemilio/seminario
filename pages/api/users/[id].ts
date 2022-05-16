@@ -15,9 +15,7 @@ export default withApiAuth(async (req: NextApiRequest, res: NextApiResponse<Usua
         switch (req.method) {
             case 'GET':
                 const user = await prisma.usuario.findUnique({
-                    where: {
-                        id,
-                    },
+                    where: { id },
                 });
                 if (user) {
                     return res.status(200).json(user);
@@ -25,16 +23,14 @@ export default withApiAuth(async (req: NextApiRequest, res: NextApiResponse<Usua
                 res.status(404).json(NOT_FOUND_ERROR);
                 break;
             case 'PUT':
-                const { correo, nombre, activo, roleId } = req.body as Usuario;
+                const { correo, nombre, activo, idRol } = req.body as Usuario;
                 const userUpdate = await prisma.usuario.update({
-                    where: {
-                        id,
-                    },
+                    where: { id },
                     data: {
                         correo,
                         nombre,
                         activo,
-                        roleId,
+                        idRol,
                     },
                 });
                 res.status(200).json(userUpdate);

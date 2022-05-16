@@ -14,9 +14,9 @@ export default withApiAuth(async (req: NextApiRequest, res: NextApiResponse<Usua
     try {
         switch (req.method) {
             case 'POST':
-                const { correo, nombre, activo = true, roleId } = req.body as Usuario;
+                const { correo, nombre, activo = true, idRol } = req.body as Usuario;
                 const id = uuidv4();
-                const user = await prisma.usuario.create({ data: { correo, id, nombre, activo, roleId } });
+                const user = await prisma.usuario.create({ data: { correo, id, nombre, activo, idRol } });
                 res.status(HTTP_CODES.CREATED).json(user);
                 break;
             case 'GET':

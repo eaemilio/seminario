@@ -133,6 +133,7 @@ model Usuario {
   PedidoMaquinaria      PedidoMaquinaria[]
   PedidoMinera          PedidoMinera[]
   PedidoPlantaProcesado PedidoPlantaProcesado[]
+  PlantaMinera          PlantaMinera[]
 }
 
 model DetallePedidoMateriaPrima {
@@ -258,6 +259,8 @@ model PlantaMinera {
   nombre            String
   dirreccion        String
   idGiroNegocio     Int?
+  encargado         String              @db.Uuid
+  Usuario           Usuario             @relation(fields: [encargado], references: [id], onDelete: NoAction, onUpdate: NoAction)
   GiroNegocio       GiroNegocio?        @relation(fields: [idGiroNegocio], references: [id], onDelete: NoAction, onUpdate: NoAction)
   InventarioMineral InventarioMineral[]
   PedidoMinera      PedidoMinera[]
