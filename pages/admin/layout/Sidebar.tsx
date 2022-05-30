@@ -1,4 +1,4 @@
-import { Text } from '@nextui-org/react';
+import { Button, Text } from '@nextui-org/react';
 import Link from 'next/link';
 import styles from '../../../styles/admin/layout/Sidebar.module.scss';
 import {
@@ -13,8 +13,16 @@ import {
     IconTruck,
 } from '@supabase/ui';
 import { BsBag, BsShopWindow, BsTruckFlatbed } from 'react-icons/bs';
+import { useUser } from '@supabase/supabase-auth-helpers/react';
+import { useEffect } from 'react';
+import useSWR from 'swr';
+import { fetchUser } from '../../../services/users';
+import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs';
+import { useRouter } from 'next/router';
 
 export default function Sidebar() {
+    // const { data: modules } = useSWR(['/api/users', user?.id], fetchUser);
+
     return (
         <div
             className="md:w-64 w-32 h-screen bg-zinc-50 sidebar py-20 px-2"
@@ -45,7 +53,7 @@ export default function Sidebar() {
                         </Text>
                     </div>
                 </Link>
-                <Link href="/admin">
+                <Link href="/admin/minerales/inventario">
                     <div className="flex gap-4 cursor-pointer items-center">
                         <IconList size={16} />
                         <Text className={styles.menuItem} size={14}>
@@ -53,7 +61,7 @@ export default function Sidebar() {
                         </Text>
                     </div>
                 </Link>
-                <Link href="/admin">
+                <Link href="/admin/minerales/tipos">
                     <div className="flex gap-4 cursor-pointer items-center">
                         <IconHexagon size={16} />
                         <Text className={styles.menuItem} size={14}>
@@ -142,6 +150,9 @@ export default function Sidebar() {
                     </div>
                 </Link>
             </div>
+            <Button color="error" className="w-full" onClick={() => supabaseClient.auth.signOut()}>
+                Cerrar Sesión
+            </Button>
         </div>
     );
 }

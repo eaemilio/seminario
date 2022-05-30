@@ -1,7 +1,7 @@
 import { Usuario } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '../../../utils/prisma';
-import { HTTP_CODES, METHOD_NOT_ALLOWED_ERROR, NOT_FOUND_ERROR } from '../constants';
+import { HTTP_CODES, METHOD_NOT_ALLOWED_ERROR, NOT_FOUND_ERROR } from '../../constants';
 import { ErrorMessage } from '../types';
 import { withApiAuth } from '@supabase/supabase-auth-helpers/nextjs';
 
@@ -23,14 +23,13 @@ export default withApiAuth(async (req: NextApiRequest, res: NextApiResponse<Usua
                 res.status(404).json(NOT_FOUND_ERROR);
                 break;
             case 'PUT':
-                const { correo, nombre, activo, idRol } = req.body as Usuario;
+                const { correo, nombre, activo } = req.body as Usuario;
                 const userUpdate = await prisma.usuario.update({
                     where: { id },
                     data: {
                         correo,
                         nombre,
                         activo,
-                        idRol,
                     },
                 });
                 res.status(200).json(userUpdate);

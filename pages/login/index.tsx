@@ -16,20 +16,11 @@ export default function Login() {
         }
     }, [user, router]);
 
-    if (!user)
-        return (
-            <div className={styles.loginContainer}>
-                <Card hoverable css={{ mw: '400px' }}>
-                    <Auth supabaseClient={supabaseClient} />
-                </Card>
-            </div>
-        );
-
     return (
-        <>
-            <Button onClick={() => supabaseClient.auth.signOut()}>Sign out</Button>
-            <p>user:</p>
-            <pre>{JSON.stringify(user, null, 2)}</pre>
-        </>
+        <div className={styles.loginContainer}>
+            <Card hoverable css={{ mw: '400px' }}>
+                <Auth supabaseClient={supabaseClient} />
+            </Card>
+        </div>
     );
 }

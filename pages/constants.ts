@@ -7,4 +7,7 @@ export const HTTP_CODES = {
     CREATED: 201,
     OK: 200,
     SERVER_ERROR: 500,
+    UPDATED: 204,
 };
+
+export const ERROR_MESSAGE = 'Ocurrió un error, intenta de nuevo';

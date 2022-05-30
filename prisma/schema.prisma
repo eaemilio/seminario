@@ -74,8 +74,10 @@ model Permiso {
   createdAt     DateTime?   @default(now()) @db.Timestamptz(6)
   idRol         Int
   idGiroNegocio Int
+  idUsuario     String      @db.Uuid
   GiroNegocio   GiroNegocio @relation(fields: [idGiroNegocio], references: [id], onDelete: NoAction, onUpdate: NoAction)
   Rol           Rol         @relation(fields: [idRol], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Usuario       Usuario     @relation(fields: [idUsuario], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model PlantaProcesado {
@@ -107,7 +109,6 @@ model Rol {
   createdAt DateTime? @default(now()) @db.Timestamptz(6)
   nombre    String?
   Permiso   Permiso[]
-  Usuario   Usuario[]
 }
 
 model SucursalMaquinaria {
@@ -128,34 +129,22 @@ model Usuario {
   nombre                String?
   correo                String                  @unique
   activo                Boolean?                @default(false)
-  idRol                 Int?
-  Rol                   Rol?                    @relation(fields: [idRol], references: [id], onDelete: NoAction, onUpdate: NoAction)
   PedidoMaquinaria      PedidoMaquinaria[]
-  PedidoMinera          PedidoMinera[]
+  PedidoMineral         PedidoMineral[]
   PedidoPlantaProcesado PedidoPlantaProcesado[]
+  Permiso               Permiso[]
   PlantaMinera          PlantaMinera[]
 }
 
-model DetallePedidoMateriaPrima {
-  id                    Int                   @id @default(autoincrement())
-  createdAt             DateTime?             @default(now()) @db.Timestamptz(6)
-  materialId            Int
-  idPedido              Int
-  cantidad              Int
-  subTotal              Float                 @db.Real
-  PedidoPlantaProcesado PedidoPlantaProcesado @relation(fields: [idPedido], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  Material              Material              @relation(fields: [materialId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-}
-
 model DetallePedidoMineral {
-  id           Int          @id @default(autoincrement())
-  createdAt    DateTime?    @default(now()) @db.Timestamptz(6)
-  idMineral    Int
-  idPedido     Int
-  cantidad     Int
-  subTotal     Int
-  Mineral      Mineral      @relation(fields: [idMineral], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  PedidoMinera PedidoMinera @relation(fields: [idPedido], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id            Int           @id @default(autoincrement())
+  createdAt     DateTime?     @default(now()) @db.Timestamptz(6)
+  idMineral     Int
+  idPedido      Int
+  cantidad      Int
+  subTotal      Int
+  Mineral       Mineral       @relation(fields: [idMineral], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  PedidoMineral PedidoMineral @relation(fields: [idPedido], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model DetallePedidoProducto {
@@ -179,13 +168,14 @@ model InventarioMaterial {
 }
 
 model InventarioMineral {
-  id             Int          @id @default(autoincrement())
   createdAt      DateTime?    @default(now()) @db.Timestamptz(6)
   idPlantaMinera Int
   idMineral      Int
-  cantidad       Int?
+  cantidad       Int?         @default(0)
   Mineral        Mineral      @relation(fields: [idMineral], references: [id], onDelete: NoAction, onUpdate: NoAction)
   PlantaMinera   PlantaMinera @relation(fields: [idPlantaMinera], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([idPlantaMinera, idMineral])
 }
 
 model InventarioProducto {
@@ -198,14 +188,14 @@ model InventarioProducto {
 }
 
 model Material {
-  id                        Int                         @id @default(autoincrement())
-  createdAt                 DateTime?                   @default(now()) @db.Timestamptz(6)
-  nombre                    String
-  descripcion               String?
-  precioUnidad              Float                       @db.Real
-  unidadMedida              String
-  DetallePedidoMateriaPrima DetallePedidoMateriaPrima[]
-  InventarioMaterial        InventarioMaterial[]
+  id                    Int                     @id @default(autoincrement())
+  createdAt             DateTime?               @default(now()) @db.Timestamptz(6)
+  nombre                String
+  descripcion           String?
+  precioUnidad          Float                   @db.Real
+  unidadMedida          String
+  DetallePedidoMaterial DetallePedidoMaterial[]
+  InventarioMaterial    InventarioMaterial[]
 }
 
 model Mineral {
@@ -214,56 +204,42 @@ model Mineral {
   nombre               String
   descripcion          String?
   precioUnidad         Float                  @db.Real
-  unidadMedida         Int?
+  unidadMedida         String?
+  active               Boolean?               @default(true)
   DetallePedidoMineral DetallePedidoMineral[]
   InventarioMineral    InventarioMineral[]
 }
 
-model PedidoMinera {
-  id                   Int                    @id(map: "PedidoMineral_pkey") @default(autoincrement())
-  createdAt            DateTime?              @default(now()) @db.Timestamptz(6)
-  nombreCliente        String
-  nit                  String?
-  notas                String?
-  subTotal             Float                  @db.Real
-  impuestos            Float                  @db.Real
-  total                Float                  @db.Real
-  createdBy            String                 @db.Uuid
-  idPlantaMinera       Int
-  Usuario              Usuario                @relation(fields: [createdBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  PlantaMinera         PlantaMinera           @relation(fields: [idPlantaMinera], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  DetallePedidoMineral DetallePedidoMineral[]
-}
-
 model PedidoPlantaProcesado {
-  id                        Int                         @id @default(autoincrement())
-  createdAt                 DateTime?                   @default(now()) @db.Timestamptz(6)
-  nombreCliente             String?
-  nit                       String?
-  notas                     String?
-  subTotal                  Float                       @db.Real
-  impuestos                 Float                       @db.Real
-  total                     Float                       @db.Real
-  createdBy                 String                      @db.Uuid
-  idPlantaProcesado         Int
-  Usuario                   Usuario                     @relation(fields: [createdBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  PlantaProcesado           PlantaProcesado             @relation(fields: [idPlantaProcesado], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  DetallePedidoMateriaPrima DetallePedidoMateriaPrima[]
-  DetallePedidoProducto     DetallePedidoProducto[]
-  ViajePedido               ViajePedido[]
+  id                    Int                     @id @default(autoincrement())
+  createdAt             DateTime?               @default(now()) @db.Timestamptz(6)
+  nombreCliente         String?
+  nit                   String?
+  notas                 String?
+  subTotal              Float                   @db.Real
+  impuestos             Float                   @db.Real
+  total                 Float                   @db.Real
+  createdBy             String                  @db.Uuid
+  idPlantaProcesado     Int
+  Usuario               Usuario                 @relation(fields: [createdBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  PlantaProcesado       PlantaProcesado         @relation(fields: [idPlantaProcesado], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  DetallePedidoMaterial DetallePedidoMaterial[]
+  DetallePedidoProducto DetallePedidoProducto[]
+  ViajePedidoProducto   ViajePedidoProducto[]
 }
 
 model PlantaMinera {
   id                Int                 @id @default(autoincrement())
   createdAt         DateTime?           @default(now()) @db.Timestamptz(6)
   nombre            String
-  dirreccion        String
+  direccion         String
   idGiroNegocio     Int?
   encargado         String              @db.Uuid
+  active            Boolean?            @default(true)
   Usuario           Usuario             @relation(fields: [encargado], references: [id], onDelete: NoAction, onUpdate: NoAction)
   GiroNegocio       GiroNegocio?        @relation(fields: [idGiroNegocio], references: [id], onDelete: NoAction, onUpdate: NoAction)
   InventarioMineral InventarioMineral[]
-  PedidoMinera      PedidoMinera[]
+  PedidoMineral     PedidoMineral[]
 }
 
 model Cliente {
@@ -276,32 +252,83 @@ model Cliente {
 }
 
 model VehiculoTransporte {
-  id            Int       @id @default(autoincrement())
-  createdAt     DateTime? @default(now()) @db.Timestamptz(6)
-  placas        String
-  modelo        String
-  marca         String
-  year          Int
-  color         String
-  transmision   Int?      @default(1)
-  observaciones String?
-  kilometraje   Int
-  Viaje         Viaje[]
+  id              Int       @id @default(autoincrement())
+  createdAt       DateTime? @default(now()) @db.Timestamptz(6)
+  placas          String
+  modelo          String
+  marca           String
+  year            Int
+  color           String
+  transmision     Int?      @default(1)
+  observaciones   String?
+  kilometraje     Int
+  capacidadMaxima Int?
+  disponible      Boolean?
+  Viaje           Viaje[]
 }
 
 model Viaje {
-  id                 Int                @id @default(autoincrement())
-  createdAt          DateTime?          @default(now()) @db.Timestamptz(6)
-  idVehiculo         Int
-  coordenadasInicio  String
-  coordenadasDestino String
-  status             Int
-  VehiculoTransporte VehiculoTransporte @relation(fields: [idVehiculo], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  ViajePedido        ViajePedido[]
+  id                  Int                   @id @default(autoincrement())
+  createdAt           DateTime?             @default(now()) @db.Timestamptz(6)
+  idVehiculo          Int
+  status              Int
+  idChofer            Int
+  Chofer              Chofer                @relation(fields: [idChofer], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  VehiculoTransporte  VehiculoTransporte    @relation(fields: [idVehiculo], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  ViajePedidoMineral  ViajePedidoMineral[]
+  ViajePedidoProducto ViajePedidoProducto[]
 }
 
-model ViajePedido {
-  id                    Int                    @id @default(autoincrement())
+model DetallePedidoMaterial {
+  id                    Int                   @id @default(autoincrement())
+  createdAt             DateTime?             @default(now()) @db.Timestamptz(6)
+  idMaterial            Int
+  idPedido              Int
+  cantidad              Int
+  subTotal              Float                 @db.Real
+  Material              Material              @relation(fields: [idMaterial], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  PedidoPlantaProcesado PedidoPlantaProcesado @relation(fields: [idPedido], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model Chofer {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime? @default(now()) @db.Timestamptz(6)
+  nombre    String
+  licencia  String
+  edad      Int
+  photo     String?
+  Viaje     Viaje[]
+}
+
+model PedidoMineral {
+  id                   Int                    @id @default(autoincrement())
+  createdAt            DateTime?              @default(now()) @db.Timestamptz(6)
+  nombreCliente        String
+  nit                  String?
+  notas                String?
+  subTotal             Float                  @db.Real
+  impuestos            Float                  @db.Real
+  total                Float                  @db.Real
+  createdBy            String                 @db.Uuid
+  idPlantaMinera       Int
+  Usuario              Usuario                @relation(fields: [createdBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  PlantaMinera         PlantaMinera           @relation(fields: [idPlantaMinera], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  DetallePedidoMineral DetallePedidoMineral[]
+  ViajePedidoMineral   ViajePedidoMineral[]
+}
+
+model ViajePedidoMineral {
+  created_at      DateTime?     @default(now()) @db.Timestamptz(6)
+  idPedidoMineral Int
+  idViaje         Int
+  PedidoMineral   PedidoMineral @relation(fields: [idPedidoMineral], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Viaje           Viaje         @relation(fields: [idViaje], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([idPedidoMineral, idViaje])
+}
+
+model ViajePedidoProducto {
+  id                    Int                    @id(map: "ViajePedido_pkey") @default(autoincrement())
   createdAt             DateTime?              @default(now()) @db.Timestamptz(6)
   idPedido              Int?
   idViaje               Int?
