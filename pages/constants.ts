@@ -11,3 +11,41 @@ export const HTTP_CODES = {
 };
 
 export const ERROR_MESSAGE = 'Ocurrió un error, intenta de nuevo';
+
+export const VARIANTS = [
+    {
+        id: 'variant',
+        options: [
+            {
+                __typename: 'MultipleChoiceOption',
+                id: 'multiple',
+                displayName: 'Tamaño',
+                values: [
+                    {
+                        label: '32x32',
+                    },
+                ],
+            },
+        ],
+    },
+];
+
+export const OPTIONS = [
+    {
+        id: 'option-color',
+        displayName: 'Color',
+        values: [
+            {
+                label: 'color',
+                hexColors: ['#222'],
+            },
+        ],
+    },
+];
+
+export enum GiroNegocio {
+    EXTRACCION_MINERA = 1,
+    MATERIA_PRIMA = 2,
+    MAQUINARIA = 3,
+    CONSTRUCCION = 4,
+}

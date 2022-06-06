@@ -23,14 +23,23 @@ export default withApiAuth(async (req: NextApiRequest, res: NextApiResponse<Usua
                     where: {
                         Permiso: {
                             some: {
-                                idGiroNegocio: {
-                                    equals: idGiroNegocio ? +idGiroNegocio : undefined,
-                                },
-                                idRol: {
-                                    equals: idRol ? +idRol : undefined,
-                                },
+                                AND: [
+                                    {
+                                        idGiroNegocio: {
+                                            equals: idGiroNegocio ? +idGiroNegocio : undefined,
+                                        },
+                                    },
+                                    {
+                                        idRol: {
+                                            equals: idRol ? +idRol : undefined,
+                                        },
+                                    },
+                                ],
                             },
                         },
+                    },
+                    include: {
+                        Permiso: true,
                     },
                 });
                 res.status(HTTP_CODES.OK).json(users);

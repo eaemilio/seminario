@@ -23,13 +23,14 @@ export default withApiAuth(async (req: NextApiRequest, res: NextApiResponse<Usua
                 res.status(404).json(NOT_FOUND_ERROR);
                 break;
             case 'PUT':
-                const { correo, nombre, activo } = req.body as Usuario;
+                const { correo, nombre, activo, avatarUrl } = req.body as Usuario;
                 const userUpdate = await prisma.usuario.update({
                     where: { id },
                     data: {
                         correo,
                         nombre,
                         activo,
+                        avatarUrl,
                     },
                 });
                 res.status(200).json(userUpdate);

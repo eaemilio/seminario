@@ -28,14 +28,11 @@ export default withApiAuth(
                     }
                     return res.status(404).json(NOT_FOUND_ERROR);
                 case 'PUT':
-                    const { direccion, encargado, nombre, active } = req.body as PlantaMinera;
+                    const body = req.body as PlantaMinera;
                     const plantaUpdate = await prisma.plantaMinera.update({
                         where: { id: +id },
                         data: {
-                            direccion,
-                            encargado,
-                            nombre,
-                            active,
+                            ...body,
                         },
                     });
                     return res.status(200).json(plantaUpdate);

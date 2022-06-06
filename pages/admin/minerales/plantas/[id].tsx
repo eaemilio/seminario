@@ -22,7 +22,7 @@ export default function PlantaMineraView() {
         register,
         handleSubmit,
         formState: { errors },
-        setValue,
+        reset,
     } = useForm<PlantaMinera>();
 
     const [isLoading, setIsLoading] = useState(false);
@@ -44,10 +44,8 @@ export default function PlantaMineraView() {
         if (!planta) {
             return;
         }
-        setValue('encargado', planta.encargado);
-        setValue('direccion', planta.direccion);
-        setValue('nombre', planta.nombre);
-    }, [planta, setValue]);
+        reset(planta);
+    }, [planta, reset]);
 
     return (
         <div className="w-full">
@@ -70,6 +68,11 @@ export default function PlantaMineraView() {
                     <div className="flex flex-col gap-2">
                         <Input {...register('direccion', { required: true })} clearable label="Dirección exacta" />
                         {errors.direccion && <RequiredTextError />}
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                        <Input {...register('nit', { required: true })} clearable label="NIT" />
+                        {errors.nit && <RequiredTextError />}
                     </div>
 
                     <div className="flex flex-col gap-2">

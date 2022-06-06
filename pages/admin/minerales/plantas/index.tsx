@@ -8,8 +8,9 @@ import useSWR from 'swr';
 import ConfirmationDialog from '../../../../components/ConfirmationDialog';
 import { IconButton } from '../../../../components/IconButton';
 import Loading from '../../../../components/Loading';
+import usePermissions from '../../../../hooks/usePermissions';
 import { fetchPlantasMineras, updatePlantaMinera } from '../../../../services/minerales/plantas';
-import { ERROR_MESSAGE } from '../../../constants';
+import { ERROR_MESSAGE, GiroNegocio } from '../../../constants';
 import AdminLayout from '../../layout/AdminLayout';
 
 export default function PlantasMineras() {
@@ -22,6 +23,7 @@ export default function PlantasMineras() {
     const [visible, setVisible] = useState(false);
     const [isUpdating, setIsUpdating] = useState(false);
     const [planta, setPlanta] = useState<PlantaMinera | null>();
+    const { canCreate } = usePermissions();
 
     const closeHandler = () => {
         setVisible(false);
@@ -62,9 +64,11 @@ export default function PlantasMineras() {
             <h2 className="mb-10">Plantas de Extracción Minera</h2>
             <div className="flex flex-col">
                 <div className="flex justify-end items-center mb-4">
-                    <Link href="plantas/new">
-                        <Button>Nueva Planta</Button>
-                    </Link>
+                    {canCreate(GiroNegocio.EXTRACCION_MINERA) && (
+                        <Link href="plantas/new">
+                            <Button>Nueva Planta</Button>
+                        </Link>
+                    )}
                 </div>
                 <div className="w-full h-fit relative">
                     {isLoading && <Loading />}
@@ -89,7 +93,7 @@ export default function PlantasMineras() {
                                 <Table.Row key={d.id}>
                                     {d.Usuario ? (
                                         <Table.Cell>
-                                            <User name={d.Usuario.nombre}></User>
+                                            <User name={d.Usuario.nombre} src={d.Usuario.avatarUrl ?? ''}></User>
                                         </Table.Cell>
                                     ) : (
                                         <></>

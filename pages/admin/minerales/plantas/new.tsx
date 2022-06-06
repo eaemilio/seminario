@@ -3,14 +3,13 @@ import { PlantaMinera } from '@prisma/client';
 import { IconArrowLeft } from '@supabase/ui';
 import { useRouter } from 'next/router';
 import { ReactElement, useState } from 'react';
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import useSWR, { useSWRConfig } from 'swr';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import useSWR from 'swr';
 import RequiredTextError from '../../../../components/RequiredText';
 import { createPlantaMinera } from '../../../../services/minerales/plantas';
 import { fetchUsers } from '../../../../services/users';
 import { TipoGiroNegocio, TipoRol } from '../../../../utils/constants';
 import AdminLayout from '../../layout/AdminLayout';
-import Select from 'react-select';
 import toast from 'react-hot-toast';
 import { ERROR_MESSAGE } from '../../../constants';
 
@@ -51,21 +50,18 @@ export default function NewPlantaMinera() {
             <div className="flex items-center justify-center mt-20">
                 <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-8 max-w-md flex-1">
                     <div className="flex flex-col gap-2">
-                        <Input
-                            {...register('nombre', { required: true })}
-                            clearable
-                            labelPlaceholder="Nombre de Planta Minera"
-                        />
+                        <Input {...register('nombre', { required: true })} clearable label="Nombre de Planta Minera" />
                         {errors.nombre && <RequiredTextError />}
                     </div>
 
                     <div className="flex flex-col gap-2">
-                        <Input
-                            {...register('direccion', { required: true })}
-                            clearable
-                            labelPlaceholder="Dirección exacta"
-                        />
+                        <Input {...register('direccion', { required: true })} clearable label="Dirección exacta" />
                         {errors.direccion && <RequiredTextError />}
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                        <Input {...register('nit', { required: true })} clearable label="NIT" />
+                        {errors.nit && <RequiredTextError />}
                     </div>
 
                     <div className="flex flex-col gap-2">

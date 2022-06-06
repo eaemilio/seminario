@@ -12,7 +12,7 @@ export default function AdminLayout({ children }: MyComponentProps) {
                 <Sidebar></Sidebar>
                 <div className="flex flex-col flex-1">
                     <Navbar></Navbar>
-                    <main className="flex-1 py-10 px-6">{children}</main>
+                    <main className="flex-1 pb-10 px-6">{children}</main>
                 </div>
             </div>
         </>

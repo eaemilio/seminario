@@ -1,17 +1,15 @@
 import { Table, Text } from '@nextui-org/react';
 import { InventarioMineral, Mineral, PlantaMinera } from '@prisma/client';
 import React, { ReactElement, useState } from 'react';
-import useSWR, { useSWRConfig } from 'swr';
+import useSWR from 'swr';
 import Loading from '../../../../components/Loading';
 import ApiGateway from '../../../../services/api-gateway';
-import useRequest from '../../../../utils/useRequest';
 import AdminLayout from '../../layout/AdminLayout';
 import InventarioModal from '../../../../components/minerales/InventarioModal';
 import { getAllInventario } from '../../../../services/minerales/inventario';
 
 export default function InventarioMineralPage() {
     const [visible, setVisible] = useState(false);
-    const [isUpdating, setIsUpdating] = useState(false);
     const [idPlantaMinera, setIdPlantaMinera] = useState<number>(0);
     const [idMineral, setIdMineral] = useState<number | null>(null);
 

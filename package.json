@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@material-tailwind/react": "^1.0.3",
     "@nextui-org/react": "^1.0.0-beta.7",
     "@prisma/client": "^3.14.0",
     "@supabase/supabase-auth-helpers": "^1.4.1",
