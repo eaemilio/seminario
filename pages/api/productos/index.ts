@@ -3,7 +3,7 @@ import { withApiAuth } from '@supabase/supabase-auth-helpers/nextjs';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { slugify } from '../../../utils/helper';
 import prisma from '../../../utils/prisma';
-import { HTTP_CODES, METHOD_NOT_ALLOWED_ERROR, OPTIONS, VARIANTS } from '../../constants';
+import { HTTP_CODES, METHOD_NOT_ALLOWED_ERROR, OPTIONS, VARIANTS } from '../../../constants';
 import { ErrorMessage } from '../types';
 
 export default withApiAuth(async (req: NextApiRequest, res: NextApiResponse<Producto[] | Producto | ErrorMessage>) => {

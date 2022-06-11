@@ -14,7 +14,7 @@ import {
     IconMapPin,
 } from '@supabase/ui';
 import { useUser } from '@supabase/supabase-auth-helpers/react';
-import { GiroNegocio } from '../../constants';
+import { GiroNegocio } from '../../../constants';
 import usePermissions from '../../../hooks/usePermissions';
 import Image from 'next/image';
 

@@ -11,7 +11,7 @@ import { fetchUsers } from '../../../../services/users';
 import { TipoGiroNegocio, TipoRol } from '../../../../utils/constants';
 import AdminLayout from '../../layout/AdminLayout';
 import toast from 'react-hot-toast';
-import { ERROR_MESSAGE } from '../../../constants';
+import { ERROR_MESSAGE } from '../../../../constants';
 
 export default function NewPlantaMinera() {
     const router = useRouter();

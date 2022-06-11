@@ -9,7 +9,7 @@ import ConfirmationDialog from '../../../../components/ConfirmationDialog';
 import { IconButton } from '../../../../components/IconButton';
 import Loading from '../../../../components/Loading';
 import ApiGateway from '../../../../services/api-gateway';
-import { ERROR_MESSAGE } from '../../../constants';
+import { ERROR_MESSAGE } from '../../../../constants';
 import AdminLayout from '../../layout/AdminLayout';
 
 export default function Minerales() {

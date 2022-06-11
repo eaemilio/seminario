@@ -11,7 +11,7 @@ import Loading from '../../../../components/Loading';
 import usePermissions from '../../../../hooks/usePermissions';
 import ApiGateway from '../../../../services/api-gateway';
 import { TipoGiroNegocio } from '../../../../utils/constants';
-import { ERROR_MESSAGE, GiroNegocio } from '../../../constants';
+import { ERROR_MESSAGE, GiroNegocio } from '../../../../constants';
 import AdminLayout from '../../layout/AdminLayout';
 
 export default function PlantasProcesado() {

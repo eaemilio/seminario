@@ -10,7 +10,7 @@ import RequiredTextError from '../../../../components/RequiredText';
 import { fetchPlantaMinera, updatePlantaMinera } from '../../../../services/minerales/plantas';
 import { fetchUsers } from '../../../../services/users';
 import { TipoGiroNegocio, TipoRol } from '../../../../utils/constants';
-import { ERROR_MESSAGE } from '../../../constants';
+import { ERROR_MESSAGE } from '../../../../constants';
 import AdminLayout from '../../layout/AdminLayout';
 
 export default function PlantaMineraView() {

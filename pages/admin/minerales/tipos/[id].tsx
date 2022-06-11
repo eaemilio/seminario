@@ -8,7 +8,7 @@ import toast from 'react-hot-toast';
 import useSWR from 'swr';
 import RequiredTextError from '../../../../components/RequiredText';
 import ApiGateway from '../../../../services/api-gateway';
-import { ERROR_MESSAGE } from '../../../constants';
+import { ERROR_MESSAGE } from '../../../../constants';
 import AdminLayout from '../../layout/AdminLayout';
 
 export default function MineralView() {

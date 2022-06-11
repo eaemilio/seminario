@@ -1,7 +1,7 @@
 import { Usuario } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '../../../utils/prisma';
-import { HTTP_CODES, METHOD_NOT_ALLOWED_ERROR } from '../../constants';
+import { HTTP_CODES, METHOD_NOT_ALLOWED_ERROR } from '../../../constants';
 import { ErrorMessage } from '../types';
 import { v4 as uuidv4 } from 'uuid';
 import { withApiAuth } from '@supabase/supabase-auth-helpers/nextjs';

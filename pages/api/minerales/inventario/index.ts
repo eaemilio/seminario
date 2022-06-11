@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { withApiAuth } from '@supabase/supabase-auth-helpers/nextjs';
 import { ErrorMessage } from '../../types';
 import prisma from '../../../../utils/prisma';
-import { HTTP_CODES, METHOD_NOT_ALLOWED_ERROR } from '../../../constants';
+import { HTTP_CODES, METHOD_NOT_ALLOWED_ERROR } from '../../../../constants';
 import { InventarioMineral } from '@prisma/client';
 
 export default withApiAuth(

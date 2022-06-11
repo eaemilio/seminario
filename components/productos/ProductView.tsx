@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { ERROR_MESSAGE } from '../../pages/constants';
+import { ERROR_MESSAGE } from '../../constants';
 import ApiGateway from '../../services/api-gateway';
 import { notNil, slugify } from '../../utils/helper';
 import { supabase } from '../../utils/supabase';

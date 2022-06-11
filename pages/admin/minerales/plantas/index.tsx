@@ -10,7 +10,7 @@ import { IconButton } from '../../../../components/IconButton';
 import Loading from '../../../../components/Loading';
 import usePermissions from '../../../../hooks/usePermissions';
 import { fetchPlantasMineras, updatePlantaMinera } from '../../../../services/minerales/plantas';
-import { ERROR_MESSAGE, GiroNegocio } from '../../../constants';
+import { ERROR_MESSAGE, GiroNegocio } from '../../../../constants';
 import AdminLayout from '../../layout/AdminLayout';
 
 export default function PlantasMineras() {
