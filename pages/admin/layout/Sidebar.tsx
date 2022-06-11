@@ -26,7 +26,9 @@ export default function Sidebar() {
             className="w-64 h-screen bg-zinc-50 sidebar py-20 px-2 relative"
             style={{ borderRight: 'solid 1px rgb(228 228 231)', overflowY: 'auto' }}
         >
-            <Image src="/logo.svg" height={50} alt="logo" width={295} />
+            <Link href={process.env.COMMERCE_URL ?? '#'}>
+                <Image src="/logo.svg" height={50} alt="logo" width={295} />
+            </Link>
             <div className="px-4 pb-6 pt-10 flex flex-col">
                 <Link href="/admin">
                     <div className="flex gap-4 cursor-pointer items-center">
