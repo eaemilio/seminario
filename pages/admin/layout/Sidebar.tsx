@@ -1,40 +1,33 @@
-import { Button, Text } from '@nextui-org/react';
+import { Button, Collapse, Text } from '@nextui-org/react';
 import Link from 'next/link';
 import styles from '../../../styles/admin/layout/Sidebar.module.scss';
 import {
     IconHome,
     IconDatabase,
-    IconShoppingBag,
     IconPackage,
     IconList,
     IconHexagon,
     IconLayers,
     IconCodesandbox,
     IconTruck,
+    IconShoppingBag,
+    IconMapPin,
 } from '@supabase/ui';
-import { BsBag, BsShopWindow, BsTruckFlatbed } from 'react-icons/bs';
 import { useUser } from '@supabase/supabase-auth-helpers/react';
-import { useEffect } from 'react';
-import useSWR from 'swr';
-import { fetchUser } from '../../../services/users';
-import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs';
-import { useRouter } from 'next/router';
-import ApiGateway from '../../../services/api-gateway';
-import { Permiso } from '@prisma/client';
-import useRequest from '../../../utils/useRequest';
 import { GiroNegocio } from '../../constants';
 import usePermissions from '../../../hooks/usePermissions';
+import Image from 'next/image';
 
 export default function Sidebar() {
-    const { user } = useUser();
     const { hasAccess } = usePermissions();
 
     return (
         <div
-            className="w-64 h-screen bg-zinc-50 sidebar py-20 px-2"
+            className="w-64 h-screen bg-zinc-50 sidebar py-20 px-2 relative"
             style={{ borderRight: 'solid 1px rgb(228 228 231)', overflowY: 'auto' }}
         >
-            <div className="px-4 py-6 flex flex-col">
+            <Image src="/logo.svg" height={50} alt="logo" width={295} />
+            <div className="px-4 pb-6 pt-10 flex flex-col">
                 <Link href="/admin">
                     <div className="flex gap-4 cursor-pointer items-center">
                         <IconHome size={16} />
@@ -139,35 +132,37 @@ export default function Sidebar() {
 
             {/* Maquinaria */}
 
-            {/* <div className="px-4 flex flex-col mb-10">
-                <Text size={12} className="text-zinc-400 font-bold mb-2">
-                    Maquinaria
-                </Text>
-                <Link href="/admin">
-                    <div className="flex gap-4 cursor-pointer items-center">
-                        <BsShopWindow size={16} color="#636363" />
-                        <Text className={styles.menuItem} size={14}>
-                            Sucursales
-                        </Text>
-                    </div>
-                </Link>
-                <Link href="/admin">
-                    <div className="flex gap-4 cursor-pointer items-center">
-                        <BsBag size={16} color="#636363" />
-                        <Text className={styles.menuItem} size={14}>
-                            Ventas
-                        </Text>
-                    </div>
-                </Link>
-                <Link href="/admin">
-                    <div className="flex gap-4 cursor-pointer items-center">
-                        <BsTruckFlatbed size={16} color="#636363" />
-                        <Text className={styles.menuItem} size={14}>
-                            Inventario de Maquinaria
-                        </Text>
-                    </div>
-                </Link>
-            </div> */}
+            {hasAccess(GiroNegocio.MAQUINARIA) && (
+                <div className="px-4 flex flex-col mb-10">
+                    <Text size={12} className="text-zinc-400 font-bold mb-2">
+                        Maquinaria
+                    </Text>
+                    <Link href="/admin/maquinaria/sucursales">
+                        <div className="flex gap-4 cursor-pointer items-center">
+                            <IconMapPin size={16} />
+                            <Text className={styles.menuItem} size={14}>
+                                Sucursales
+                            </Text>
+                        </div>
+                    </Link>
+                    <Link href="/admin">
+                        <div className="flex gap-4 cursor-pointer items-center">
+                            <IconShoppingBag size={16} />
+                            <Text className={styles.menuItem} size={14}>
+                                Ventas
+                            </Text>
+                        </div>
+                    </Link>
+                    <Link href="/admin">
+                        <div className="flex gap-4 cursor-pointer items-center">
+                            <IconTruck size={16} />
+                            <Text className={styles.menuItem} size={14}>
+                                Inventario de Maquinaria
+                            </Text>
+                        </div>
+                    </Link>
+                </div>
+            )}
             {/* <Button color="error" rounded flat className="w-full" onClick={() => supabaseClient.auth.signOut()}>
                 Cerrar Sesión
             </Button> */}

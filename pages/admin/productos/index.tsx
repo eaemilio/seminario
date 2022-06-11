@@ -16,16 +16,8 @@ export default function ProductsView() {
         data: productos,
         isValidating: isLoading,
         error,
-        mutate,
     } = useSWR<Producto[]>('/api/productos', ApiGateway.fetchAll);
-    const [visible, setVisible] = useState(false);
-    const [planta, setPlanta] = useState<Producto | null>();
     const { canCreate, canUpdate } = usePermissions();
-
-    const closeHandler = () => {
-        setVisible(false);
-        setPlanta(null);
-    };
 
     return (
         <div>

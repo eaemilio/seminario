@@ -1,5 +1,5 @@
 import { Avatar } from '@nextui-org/react';
-import { IconBell } from '@supabase/ui';
+import { IconBell, IconSettings } from '@supabase/ui';
 import Link from 'next/link';
 import useProfile from '../../../hooks/useProfile';
 import { getInitals } from '../../../utils/helper';
@@ -11,6 +11,9 @@ export default function Navbar() {
         <div className="p-6 justify-between items-center flex">
             <div></div>
             <div className="flex items-center gap-8">
+                <Link href="/admin/settings">
+                    <IconSettings size={22} className="cursor-pointer" />
+                </Link>
                 <IconBell size={22} className="cursor-pointer" />
                 <Link href="/admin/profile">
                     <Avatar
