@@ -43,7 +43,7 @@ export default function ProfileView() {
 
     const signOut = (): void => {
         supabaseClient.auth.signOut();
-        router.push('/login');
+        location.reload();
     };
 
     return (
