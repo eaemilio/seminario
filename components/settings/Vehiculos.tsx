@@ -56,7 +56,7 @@ export default function Vehiculos() {
                                     <Table.Cell>
                                         <div className="flex gap-2 items-center">
                                             <Tooltip content="GPS">
-                                                <Link href={`productos/${d.id}`}>
+                                                <Link href="">
                                                     <IconButton>
                                                         <IconMapPin size={20} />
                                                     </IconButton>
